@@ -60,7 +60,12 @@ class Admin {
 	 * @access private
 	 * @return self
 	 */
-	private function __construct() {}
+	private function __construct() {
+
+		// Add the settings page to the admin menu.
+		add_action( 'admin_menu', [ $this, 'settings_page' ] );
+
+	}
 
 	/**
 	 * Class dependency files.
@@ -70,6 +75,103 @@ class Admin {
 	 * @return void
 	 */
 	private function dependencies() {}
+
+	/**
+	 * Add development subpage to Tools in the admin menu.
+	 *
+	 * Uses the universal slug partial for admin pages. Set this
+     * slug in the core plugin file.
+	 *
+	 * Adds a contextual help section.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function settings_page() {
+
+		$this->page_help_section = add_management_page(
+			__( 'Website Development', 'controlled-chaos-dev' ),
+			__( 'Site Development', 'controlled-chaos-dev' ),
+			'manage_options',
+			CCDEV_ADMIN_SLUG . '-settings',
+			[ $this, 'settings_page_output' ]
+		);
+
+		// Add content to the Help tab.
+		add_action( 'load-' . $this->page_help_section, [ $this, 'settings_page_help_section' ] );
+
+	}
+
+	/**
+	 * Get development subpage output.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function settings_page_output() {
+
+		require CCDEV_PATH . 'admin/partials/settings-page.php';
+
+	}
+
+	/**
+     * Output for the development page contextual help section.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+     */
+    public function settings_page_help_section() {
+
+		// Add to the development page.
+		$screen = get_current_screen();
+		if ( $screen->id != $this->page_help_section ) {
+			return;
+		}
+
+		// More information.
+		$screen->add_help_tab( [
+			'id'       => 'help_dev_info',
+			'title'    => __( 'More Information', 'controlled-chaos-dev' ),
+			'content'  => null,
+			'callback' => [ $this, 'help_dev_info_output' ]
+		] );
+
+		// Add a help sidebar.
+		$screen->set_help_sidebar(
+			$this->help_dev_info_sidebar()
+		);
+
+	}
+
+	/**
+     * Get more information help tab content.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+     */
+	public function help_dev_info_output() {
+
+		include_once CCDEV_PATH . 'admin/partials/help-dev-info.php';
+
+    }
+
+    /**
+     * Get development page contextual tab sidebar content.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+     */
+    public function help_dev_info_sidebar() {
+
+		$html = '';
+		return $html;
+
+	}
 
 }
 
