@@ -74,7 +74,7 @@ class i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'controlled-chaos-plugin',
+			'controlled-chaos-dev',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
